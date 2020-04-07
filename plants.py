@@ -25,18 +25,23 @@ def plant():
     today = datetime.datetime.now()
     
     # if it's the right day and time
-    if (today.weekday() == 0 or today.weekday() == 4) and today.hour >= 9:
+    if (today.weekday() == 0 or today.weekday() == 4) and today.hour >= 20:
         
         # if we haven't done our work for today yet...
-        if not os.path.exists("tmp/job_well_done"):
+        if not os.path.exists("/var/tmp/plants_job_well_done"):
             
             # ... send the message :D
-            bot.sendMessage(config.groupid_MAIN, messages.get_message_content())
+            try:
+                bot.sendMessage(config.groupid_MAIN, messages.get_message_content())
+
+                # create a file so we know not to do it again today
+                with open("/var/tmp/plants_job_well_done", "w") as f:
+                    f.close()
+
+            except:
+                pass
+
             
-            # create a file so we know not to do it again today
-            with open("tmp/job_well_done", "w") as f:
-                f.close()
-        
         # ... otherwise we're done. ^^
         else:
             pass
@@ -45,8 +50,8 @@ def plant():
     else:
         
         # delete the file so we know to send the message again later
-        if os.path.exists("tmp/job_well_done"):
-            os.remove("tmp/job_well_done")
+        if os.path.exists("/var/tmp/plants_job_well_done"):
+            os.remove("/var/tmp/plants_job_well_done")
             
 if __name__ == '__main__':
     telepot.loop.MessageLoop(bot, commands.handle).run_as_thread()
