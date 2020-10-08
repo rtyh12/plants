@@ -1,8 +1,12 @@
 from plants import bot
+import config
+from pprint import pprint
 import messages
 
 def handle(msg):
-    print("hello")
+    if config.debug:
+        pprint(msg)
+        print()
     
     if msg['text'] == '/msg':
         send = ""
